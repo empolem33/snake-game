@@ -28,3 +28,83 @@ gameBoardPixels[currentFoodPositon].classList.add('food')
 
 
 //snake behavior
+
+const LEFT_DIR = 37
+const UP_DIR = 38
+const RIGHT_DIR = 39
+const DOWN_DIR = 40
+
+let snakeCurrentDirection = RIGHT_DIR
+//input validation
+const changeDirecton = newDirectionCode => {
+    if(newDirectionCode == snakeCurrentDirection) return;
+
+    if(newDirectionCode == LEFT_DIR && snakeCurrentDirection !== RIGHT_DIR){
+        snakeCurrentDirection = newDirectionCode
+    } 
+    else if(newDirectionCode == UP_DIR && snakeCurrentDirection !== DOWN_DIR){
+        snakeCurrentDirection = newDirectionCode
+    } 
+    else if(newDirectionCode == RIGHT_DIR && snakeCurrentDirection !== LEFT_DIR){
+        snakeCurrentDirection = newDirectionCode
+    }
+    else if(newDirectionCode == DOWN_DIR && snakeCurrentDirection !== UP_DIR){
+        snakeCurrentDirection = newDirectionCode
+    }
+}
+// set starting point
+let currentHeadPosition = TOTAL_PIXEL_COUNT /2
+
+//set snanke length
+let snakeLength =200
+
+//move snake
+const moveSnake = () => {
+    switch(snakeCurrentDirection) {
+        case LEFT_DIR:
+            --currentHeadPosition
+            const isHeadAtLeft = currentHeadPosition % LINE_PIXEL_COUNT == 
+            LINE_PIXEL_COUNT - 1 || currentHeadPosition < 0
+            if(isHeadAtLeft){
+                currentHeadPosition = currentHeadPosition + LINE_PIXEL_COUNT
+            }
+            break;
+             case RIGHT_DIR:
+            ++currentHeadPosition
+            const isHeadAtRight = currentHeadPosition % LINE_PIXEL_COUNT == 0
+            if(isHeadAtRight){
+                currentHeadPosition = currentHeadPosition - LINE_PIXEL_COUNT
+            }
+            break;
+        case UP_DIR :
+            currentHeadPosition = currentHeadPosition - LINE_PIXEL_COUNT
+            const isHeadAtTop = currentHeadPosition < 0 
+            if(isHeadAtTop){
+                currentHeadPosition= currentHeadPosition + TOTAL_PIXEL_COUNT
+            }
+            break;
+        case DOWN_DIR:
+            currentHeadPosition = currentHeadPosition + LINE_PIXEL_COUNT
+            const isHeadAtBottom = currentHeadPosition > TOTAL_PIXEL_COUNT - 1
+            if(isHeadAtBottom){
+                currentHeadPosition = currentHeadPosition - TOTAL_PIXEL_COUNT 
+            }
+            break;
+            default:
+            break;
+    }
+    let nextSnakeHeadPixel = gameBoardPixels[currentHeadPosition]
+
+    if(nextSnakeHeadPixel.classList.contains('snakeBodyPixel')) {
+        clearInterval()
+        alert(`you have eaten ${totalFoodEaten} food and traveld ${totalDistanceTraveled} blocks.`)
+        window.location.reload()
+    }
+    nextSnakeHeadPixel.classList.add('snakeBodyPixel')
+}
+
+createGameBoardPixels();
+
+createFood();
+
+let moveSnakeInterval = setInterval(moveSnake,100)

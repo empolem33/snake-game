@@ -96,15 +96,41 @@ const moveSnake = () => {
     let nextSnakeHeadPixel = gameBoardPixels[currentHeadPosition]
 
     if(nextSnakeHeadPixel.classList.contains('snakeBodyPixel')) {
-        clearInterval()
+        clearInterval(moveSnakeInterval)
         alert(`you have eaten ${totalFoodEaten} food and traveld ${totalDistanceTraveled} blocks.`)
         window.location.reload()
     }
     nextSnakeHeadPixel.classList.add('snakeBodyPixel')
+    //remove snake style
+    setTimeout(()=>{
+        nextSnakeHeadPixel.classList.remove("snakeBodyPixel")
+    }, snakeLength)
+//add pixel to snake after eating food
+    if(currentHeadPosition == currentFoodPositon){
+        totalFoodEaten++
+        document.getElementById("pointsEarned").innerText = totalFoodEaten
+        snakeLength= snakeLength + 100
+        createFood()
+    }
+    totalDistanceTraveled++
+    document.getElementById("pointsTraveled").innerText= totalDistanceTraveled
 }
+
 
 createGameBoardPixels();
 
 createFood();
 
 let moveSnakeInterval = setInterval(moveSnake,100)
+
+addEventListener('keydown', e => changeDirecton(e.keyCode))
+
+const leftButton = document.getElementById('leftButton')
+const rightButton = document.getElementById('rightButton')
+const upButton = document.getElementById('upButton')
+const downButton = document.getElementById('downButton')
+
+leftButton.onclick = () => changeDirecton(LEFT_DIR)
+rightButton.onclick = () => changeDirecton(RIGHT_DIR)
+upButton.onclick = () => changeDirecton(UP_DIR)
+downButton.onclick = () => changeDirecton(DOWN_DIR)
